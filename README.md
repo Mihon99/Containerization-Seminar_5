@@ -9,9 +9,11 @@
 
 **Выполнение**
 # Создаем файл docker-composer.yaml
+
 root@reaper:~/compose# nano compose.yaml
 
 # Посмотрим содержимое файла
+
 root@reaper:~/compose# cat compose.yaml
 version: ‘3.9’
 
@@ -30,13 +32,15 @@ services:
       - 6080:8080
 
 # Поднимаем сервис на основе этого файла
+
 root@reaper:~/compose# docker compose up -d
 [+] Building 0.0s (0/0)
 [+] Running 2/0
  ✔ Container compose-adminer-1  Running                                                                            0.0s
  ✔ Container compose-db-1       Running                                                                            0.0s
 
-# Проверяем 
+# Проверяем
+
 root@reaper:~/compose# docker ps -a
 CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS                    PORTS                                       NAMES
 b2123d294118   adminer:4.8.1            "entrypoint.sh php -…"   40 minutes ago   Up 39 minutes             0.0.0.0:6080->8080/tcp, :::6080->8080/tcp   compose-adminer-1
@@ -55,6 +59,7 @@ c62fe5c5a706   hello-world              "/hello"                 3 months ago   
 # Подключаемся к adminer  в браузере по адресу http://localhost:6080
 
 # Инициализируем swarm
+
 root@reaper:~/compose# docker swarm init
 Swarm initialized: current node (jcjydag44eyfamnyvntmdkiot) is now a manager.
 
@@ -65,6 +70,7 @@ To add a worker to this swarm, run the following command:
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 
 # Добавляем вторую ноду на хосте reaper2
+
 root@reaper2:~$ docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
 permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/swarm/join": dial unix /var/run/docker.sock: connect: permission denied
 root@reaper2:~$ sudo !!
@@ -73,11 +79,13 @@ sudo docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0o
 This node joined a swarm as a worker.
 
 # Добавляем третью ноду на хосте reaper3
+
 root@reaper3:~# docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
 [sudo] password for reaper: 
 This node joined a swarm as a worker.
 
 # Проверяем наличие нод и их состояние (на хосте мастер-ноды)
+
 root@reaper:~/compose# docker node ls
 ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
 jcjydag44eyfamnyvntmdkiot *   reaper      Ready     Active         Leader           24.0.4
@@ -85,6 +93,7 @@ latu4gl026bleo789vc6vpyk1     reaper2     Ready     Active                      
 pn1c1mwrfleovi5nulkrsclox     reaper3     Ready     Active                          24.0.4
 
 # Добавляем нодам метки(labels) и проверяем их наличие
+
 root@reaper:~/compose# docker node update --label-add env=lab pn1c1mwrfleovi5nulkrsclox
 pn1c1mwrfleovi5nulkrsclox
 root@reaper:~/compose# docker inspect --format='{{json .Spec}}' pn1c1mwrfleovi5nulkrsclox
@@ -101,6 +110,7 @@ root@reaper:~/compose# docker inspect --format='{{json .Spec}}' latu4gl026bleo78
 {"Labels":{"env":"prod"},"Role":"worker","Availability":"active"}
 
 # Создаем сервис sql-service на двух контейнерах
+
 root@reaper:~/compose#   docker service create --name sql-service --replicas 2 -e MYSQL_ROOT_PASSWORD=12345 mariadb:10.10.2
 permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/services/create": dial unix /var/run/docker.sock: connect: permission denied
 root@reaper:~/compose#  sudo !!
@@ -112,6 +122,7 @@ overall progress: 2 out of 2 tasks
 verify: Service converged
 
 # Проверяем наличие и распределение контейнеров сервиса на всех нодах
+
 root@reaper:~/compose# docker ps
 CONTAINER ID   IMAGE             COMMAND                  CREATED             STATUS          PORTS                                       NAMES
 91752a2de435   mariadb:10.10.2   "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes    3306/tcp                                    sql-service.2.mt9s4evdlfb2d52qxjogdiyac
@@ -130,9 +141,11 @@ e7e722624b4c   mariadb:10.10.2 "docker-entrypoint.s…"   2 hours ago   Up 28 mi
 b485bed9c421   adminer:4.8.1   "entrypoint.sh php -…"   2 hours ago   Up 28 minutes   0.0.0.0:6080->8080/tcp, :::8085->8080/tcp   compose-adminer-1
 
 # Масштабируем сервис в 0 (снимаем нагрузку)
+
 root@reaper:~/compose# docker service scale sql-service=0
 
 # Создаем новый сервис из 2-х контейнеров на ноде "prod"
+
 root@reaper:~/compose# docker service create --name prod_sql_service --constraint node.labels.env==prod --replicas 2 -e MYSQL_ROOT_PASSWORD=12345 mariadb:10.10.2 
 lyomxjig6ljaiw32r4wapmkpn
 overall progress: 2 out of 2 tasks 
@@ -141,12 +154,14 @@ overall progress: 2 out of 2 tasks
 verify: Service converged
 
 # Проверяем сервисы
+
 root@reaper:~/compose# docker service ls
 ID             NAME               MODE         REPLICAS   IMAGE             PORTS
 lyomxjig6lja   prod_sql_service   replicated   2/2        mariadb:10.10.2   
 9tq1jv2hoyje   sql-service        replicated   0/0        mariadb:10.10.2 
 
 # Проверяем контейнеры на ноде "prod" (хост mssvm2)
+
 root@reaper:~/compose# docker ps 
 CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                 NAMES
 6035769196d3   mariadb:10.10.2   "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp              prod_sql_service.1.nqjpr6mjcjjv36wkbcy4cfu5k
