@@ -30,139 +30,124 @@ services:
       - 6080:8080
 
 # Поднимаем сервис на основе этого файла
-mss@mssvm:~/dz5$ sudo docker compose up -d
-[+] Running 20/20
- ✔ adminer 7 layers [⣿⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                                                                                             55.6s 
-   ✔ 34df401c391c Pull complete                                                                                                                                                  52.0s 
-   ✔ 942860e9b081 Pull complete                                                                                                                                                  53.7s 
-   ✔ f571177b537e Pull complete                                                                                                                                                  53.7s 
-   ✔ 78d7a59571f8 Pull complete                                                                                                                                                  53.8s 
-   ✔ 530e7e02f755 Pull complete                                                                                                                                                  53.8s 
-   ✔ 03ee8734c62c Pull complete                                                                                                                                                  53.9s 
-   ✔ ed7a0cc37cf2 Pull complete                                                                                                                                                  53.9s 
- ✔ db 11 layers [⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                                                                                            111.5s 
-   ✔ e2c03c89dcad Pull complete                                                                                                                                                  61.2s 
-   ✔ 68eb43837bf8 Pull complete                                                                                                                                                  61.2s 
-   ✔ 796892ddf5ac Pull complete                                                                                                                                                  61.3s 
-   ✔ 6bca45eb31e1 Pull complete                                                                                                                                                  61.5s 
-   ✔ ebb53bc0dcca Pull complete                                                                                                                                                  61.5s 
-   ✔ 2e2c6bdc7a40 Pull complete                                                                                                                                                  61.6s 
-   ✔ 6f27b5c76970 Pull complete                                                                                                                                                  92.4s 
-   ✔ 438533a24810 Pull complete                                                                                                                                                  92.4s 
-   ✔ e5bdf19985e0 Pull complete                                                                                                                                                 108.5s 
-   ✔ 667fa148337b Pull complete                                                                                                                                                 108.5s 
-   ✔ 5baa702110e4 Pull complete                                                                                                                                                 108.5s 
-[+] Running 3/3
- ✔ Network dz5_default      Created                                                                                                                                               0.1s 
- ✔ Container dz5-adminer-1  Started                                                                                                                                               1.0s 
- ✔ Container dz5-db-1       Started                                                                                                                                               1.0s 
+root@reaper:~/compose# docker compose up -d
+[+] Building 0.0s (0/0)
+[+] Running 2/0
+ ✔ Container compose-adminer-1  Running                                                                            0.0s
+ ✔ Container compose-db-1       Running                                                                            0.0s
 
 # Проверяем 
-mss@mssvm:~/dz5$ sudo docker ps -a
-CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-a2c763b17f62   mysql:8.0       "docker-entrypoint.s…"   53 seconds ago   Up 52 seconds   3306/tcp, 33060/tcp                         dz5-db-1
-68ae79a13683   adminer:4.8.1   "entrypoint.sh php -…"   53 seconds ago   Up 52 seconds   0.0.0.0:8085->8080/tcp, :::8085->8080/tcp   dz5-adminer-1
+root@reaper:~/compose# docker ps -a
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS                    PORTS                                       NAMES
+b2123d294118   adminer:4.8.1            "entrypoint.sh php -…"   40 minutes ago   Up 39 minutes             0.0.0.0:6080->8080/tcp, :::6080->8080/tcp   compose-adminer-1
+e34ce20dab62   mariadb:10.10.2          "docker-entrypoint.s…"   40 minutes ago   Up 39 minutes             3306/tcp                                    compose-db-1
+f4eb4f40143f   image_for_task4:latest   "python ./task4.py"      5 days ago       Exited (0) 5 days ago                                                 funny_engelbart
+92a23be60b01   ubuntu:22.10             "/bin/bash"              5 days ago       Exited (0) 5 days ago                                                 gb-test
+5d389821236b   ubuntu:22.10             "bash"                   5 days ago       Exited (127) 5 days ago                                               gracious_benz
+09e77c329d00   ubuntu:22.10             "bash"                   5 days ago       Exited (127) 5 days ago                                               dazzling_buck
+b196a4319211   mysql                    "docker-entrypoint.s…"   5 days ago       Exited (130) 5 days ago                                               happy_tu
+850e46b8182b   mysql                    "docker-entrypoint.s…"   5 days ago       Created                                                               boring_mccarthy
+446fe5a5a560   mysql                    "docker-entrypoint.s…"   5 days ago       Exited (130) 5 days ago                                               vigilant_lalande
+dcb67e16c779   mysql                    "docker-entrypoint.s…"   5 days ago       Exited (130) 5 days ago                                               awesome_bartik
+f75eda6d5115   mysql                    "docker-entrypoint.s…"   5 days ago       Created                                                               silly_blackwell
+c62fe5c5a706   hello-world              "/hello"                 3 months ago     Exited (0) 3 months ago                                               pensive_galileo
 
-# Подключаемся к adminer  в браузере по адресу http://localhost:8085
+# Подключаемся к adminer  в браузере по адресу http://localhost:6080
 
 # Инициализируем swarm
-mss@mssvm:~/dz5$ sudo docker swarm init
-Swarm initialized: current node (jb5fd4hyolcmmkgjwj1en6w56) is now a manager.
+root@reaper:~/compose# docker swarm init
+Swarm initialized: current node (jcjydag44eyfamnyvntmdkiot) is now a manager.
 
 To add a worker to this swarm, run the following command:
 
-    docker swarm join --token SWMTKN-1-4qyahk52c4qgjjre56iekn4p8kg94ovfksz6ectd1h0nyapvjl-a6314lnvqhx6ojqtmh53hsjpk 192.168.1.48:2377
+    docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 
-mss@mssvm:~/dz5$ 
-
-# Добавляем вторую ноду на хосте mssvm2
-mss@mssvm2:~$ docker swarm join --token SWMTKN-1-4qyahk52c4qgjjre56iekn4p8kg94ovfksz6ectd1h0nyapvjl-a6314lnvqhx6ojqtmh53hsjpk 192.168.1.48:2377
+# Добавляем вторую ноду на хосте reaper2
+root@reaper2:~$ docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
 permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/swarm/join": dial unix /var/run/docker.sock: connect: permission denied
-mss@mssvm2:~$ sudo !!
-sudo docker swarm join --token SWMTKN-1-4qyahk52c4qgjjre56iekn4p8kg94ovfksz6ectd1h0nyapvjl-a6314lnvqhx6ojqtmh53hsjpk 192.168.1.48:2377
-[sudo] password for mss: 
+root@reaper2:~$ sudo !!
+sudo docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
+[sudo] password for reaper: 
 This node joined a swarm as a worker.
 
-# Добавляем третью ноду на хосте mssvm3
-mss@mssvm3:~$ sudo docker swarm join --token SWMTKN-1-4qyahk52c4qgjjre56iekn4p8kg94ovfksz6ectd1h0nyapvjl-a6314lnvqhx6ojqtmh53hsjpk 192.168.1.48:2377
-[sudo] password for mss: 
+# Добавляем третью ноду на хосте reaper3
+root@reaper3:~# docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
+[sudo] password for reaper: 
 This node joined a swarm as a worker.
 
 # Проверяем наличие нод и их состояние (на хосте мастер-ноды)
-mss@mssvm:~/dz5$ sudo docker node ls
+root@reaper:~/compose# docker node ls
 ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
-jb5fd4hyolcmmkgjwj1en6w56 *   mssvm      Ready     Active         Leader           24.0.4
-latu4gl026bleo789vc6vpyk1     mssvm2     Ready     Active                          24.0.4
-pn1c1mwrfleovi5nulkrsclox     mssvm3     Ready     Active                          24.0.4
+jcjydag44eyfamnyvntmdkiot *   reaper      Ready     Active         Leader           24.0.4
+latu4gl026bleo789vc6vpyk1     reaper2     Ready     Active                          24.0.4
+pn1c1mwrfleovi5nulkrsclox     reaper3     Ready     Active                          24.0.4
 
 # Добавляем нодам метки(labels) и проверяем их наличие
-mss@mssvm:~/dz5$ sudo docker node update --label-add env=lab pn1c1mwrfleovi5nulkrsclox
+root@reaper:~/compose# docker node update --label-add env=lab pn1c1mwrfleovi5nulkrsclox
 pn1c1mwrfleovi5nulkrsclox
-mss@mssvm:~/dz5$ sudo docker inspect --format='{{json .Spec}}' pn1c1mwrfleovi5nulkrsclox
+root@reaper:~/compose# docker inspect --format='{{json .Spec}}' pn1c1mwrfleovi5nulkrsclox
 {"Labels":{"env":"lab"},"Role":"worker","Availability":"active"}
 
-mss@mssvm:~/dz5$ sudo docker node update --label-add env=dev jb5fd4hyolcmmkgjwj1en6w56
+root@reaper:~/compose# docker node update --label-add env=dev jb5fd4hyolcmmkgjwj1en6w56
 jb5fd4hyolcmmkgjwj1en6w56
-mss@mssvm:~/dz5$ sudo docker inspect --format='{{json .Spec}}' jb5fd4hyolcmmkgjwj1en6w56
+root@reaper:~/compose# docker inspect --format='{{json .Spec}}' jb5fd4hyolcmmkgjwj1en6w56
 {"Labels":{"env":"dev"},"Role":"manager","Availability":"active"}
 
-mss@mssvm:~/dz5$ sudo docker node update --label-add env=prod latu4gl026bleo789vc6vpyk1
+root@reaper:~/compose# docker node update --label-add env=prod latu4gl026bleo789vc6vpyk1
 latu4gl026bleo789vc6vpyk1
-mss@mssvm:~/dz5$ sudo docker inspect --format='{{json .Spec}}' latu4gl026bleo789vc6vpyk1
+root@reaper:~/compose# docker inspect --format='{{json .Spec}}' latu4gl026bleo789vc6vpyk1
 {"Labels":{"env":"prod"},"Role":"worker","Availability":"active"}
 
 # Создаем сервис sql-service на двух контейнерах
-mss@mssvm:~/dz5$ docker service create --name sql-service --replicas 2 -e MYSQL_ROOT_PASSWORD=tst123 mysql:8.0
+root@reaper:~/compose#   docker service create --name sql-service --replicas 2 -e MYSQL_ROOT_PASSWORD=12345 mariadb:10.10.2
 permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/services/create": dial unix /var/run/docker.sock: connect: permission denied
-mss@mssvm:~/dz5$ sudo !!
+root@reaper:~/compose#  sudo !!
 sudo docker service create --name sql-service --replicas 2 -e MYSQL_ROOT_PASSWORD=tst123 mysql:8.0
-jfi651hjbbdhi0ugdj1hhz0rz
-overall progress: 2 out of 2 tasks 
-1/2: running   [==================================================>] 
-2/2: running   [==================================================>] 
-verify: Service converged 
+9tq1jv2hoyjedv06muhj5zeko
+overall progress: 2 out of 2 tasks
+1/2: running   [==================================================>]
+2/2: running   [==================================================>]
+verify: Service converged
 
 # Проверяем наличие и распределение контейнеров сервиса на всех нодах
-mss@mssvm:~/dz5$ sudo docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-5b1f6b31eadc   mysql:8.0       "docker-entrypoint.s…"   2 minutes ago    Up 2 minutes    3306/tcp, 33060/tcp                         sql-service.2.s5fkd4yl4608da2dbfcizf60x
-a2c763b17f62   mysql:8.0       "docker-entrypoint.s…"   19 minutes ago   Up 19 minutes   3306/tcp, 33060/tcp                         dz5-db-1
-68ae79a13683   adminer:4.8.1   "entrypoint.sh php -…"   19 minutes ago   Up 19 minutes   0.0.0.0:8085->8080/tcp, :::8085->8080/tcp   dz5-adminer-1
-mss@mssvm2:~$ sudo docker ps
-[sudo] password for mss: 
+root@reaper:~/compose# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED             STATUS          PORTS                                       NAMES
+91752a2de435   mariadb:10.10.2   "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes    3306/tcp                                    sql-service.2.mt9s4evdlfb2d52qxjogdiyac
+b2123d294118   adminer:4.8.1     "entrypoint.sh php -…"   About an hour ago   Up 10 minutes   0.0.0.0:6080->8080/tcp, :::6080->8080/tcp   compose-adminer-1
+e34ce20dab62   mariadb:10.10.2   "docker-entrypoint.s…"   About an hour ago   Up 10 minutes   3306/tcp                                    compose-db-1
+root@reaper2:~/compose# docker ps
+[sudo] password for reaper: 
 CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS          PORTS                                       NAMES
-8ac1fe7a8206   mysql:8.0       "docker-entrypoint.s…"   5 minutes ago   Up 5 minutes    3306/tcp, 33060/tcp                         sql-service.1.cipnv7s3865hnk735mv3aisup
-e5e722524b4c   mysql:8.0       "docker-entrypoint.s…"   2 hours ago     Up 25 minutes   3306/tcp, 33060/tcp                         dz5-db-1
-b435bed9c721   adminer:4.8.1   "entrypoint.sh php -…"   2 hours ago     Up 25 minutes   0.0.0.0:8085->8080/tcp, :::8085->8080/tcp   dz5-adminer-1
-mss@mssvm3:~$ sudo docker ps
-[sudo] password for mss: 
+a36c100bd6ce   mariadb:10.10.2 "docker-entrypoint.s…"   5 minutes ago   Up 5 minutes    3306/tcp                                    sql-service.1.obz5vkb0qbr1btwotml2dhmd4
+e7e722624b4c   mariadb:10.10.2 "docker-entrypoint.s…"   2 hours ago     Up 25 minutes   3306/tcp                                    compose-db-1
+b485bed9c421   adminer:4.8.1   "entrypoint.sh php -…"   2 hours ago     Up 25 minutes   0.0.0.0:6080->8080/tcp, :::8085->8080/tcp   compose-adminer-1
+root@reaper3:~/compose# docker ps
+[sudo] password for reaper: 
 CONTAINER ID   IMAGE           COMMAND                  CREATED       STATUS          PORTS                                       NAMES
-e5e722524b4c   mysql:8.0       "docker-entrypoint.s…"   2 hours ago   Up 28 minutes   3306/tcp, 33060/tcp                         dz5-db-1
-b435bed9c721   adminer:4.8.1   "entrypoint.sh php -…"   2 hours ago   Up 28 minutes   0.0.0.0:8085->8080/tcp, :::8085->8080/tcp   dz5-adminer-1
+e7e722624b4c   mariadb:10.10.2 "docker-entrypoint.s…"   2 hours ago   Up 28 minutes   3306/tcp                                    compose-db-1
+b485bed9c421   adminer:4.8.1   "entrypoint.sh php -…"   2 hours ago   Up 28 minutes   0.0.0.0:6080->8080/tcp, :::8085->8080/tcp   compose-adminer-1
 
 # Масштабируем сервис в 0 (снимаем нагрузку)
-mss@mssvm:~/dz5$ sudo docker service scale sql-service=0
+root@reaper:~/compose# docker service scale sql-service=0
 
 # Создаем новый сервис из 2-х контейнеров на ноде "prod"
-mss@mssvm:~/dz5$ sudo docker service create --name prod_sql_service --constraint node.labels.env==prod --replicas 2 -e MYSQL_ROOT_PASSWORD=tst123 mysql:8.0
-[sudo] password for mss: 
-1u8wniwtkdcngtjt5k6slfniw
+root@reaper:~/compose# docker service create --name prod_sql_service --constraint node.labels.env==prod --replicas 2 -e MYSQL_ROOT_PASSWORD=12345 mariadb:10.10.2 
+lyomxjig6ljaiw32r4wapmkpn
 overall progress: 2 out of 2 tasks 
 1/2: running   [==================================================>] 
 2/2: running   [==================================================>] 
 verify: Service converged
 
 # Проверяем сервисы
-mss@mssvm:~/dz5$ sudo docker service ls
-ID             NAME               MODE         REPLICAS   IMAGE       PORTS
-1u8wniwtkdcn   prod_sql_service   replicated   2/2        mysql:8.0   
-jfi651hjbbdh   sql-service        replicated   0/0        mysql:8.0 
+root@reaper:~/compose# docker service ls
+ID             NAME               MODE         REPLICAS   IMAGE             PORTS
+lyomxjig6lja   prod_sql_service   replicated   2/2        mariadb:10.10.2   
+9tq1jv2hoyje   sql-service        replicated   0/0        mariadb:10.10.2 
 
 # Проверяем контейнеры на ноде "prod" (хост mssvm2)
-mss@mssvm2:~/dz5$ sudo docker ps
-[sudo] password for mss: 
-CONTAINER ID   IMAGE       COMMAND                  CREATED         STATUS         PORTS                 NAMES
-6025739096d3   mysql:8.0   "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp, 33060/tcp   prod_sql_service.1.nqjpr1mjcjjv36wkbcy9cfu7k
-124c74d8a0b5   mysql:8.0   "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp, 33060/tcp   prod_sql_service.2.meih3kv60brskmtvjvtg05uxj
+root@reaper:~/compose# docker ps 
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                 NAMES
+6035769196d3   mariadb:10.10.2   "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp              prod_sql_service.1.nqjpr6mjcjjv36wkbcy4cfu5k
+124c74d8a0b5   mariadb:10.10.2   "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp              prod_sql_service.2.meih5kv70brskmtvjvtg08uxj
