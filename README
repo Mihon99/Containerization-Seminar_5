@@ -72,9 +72,6 @@ To add a manager to this swarm, run 'docker swarm join-token manager' and follow
 # Добавляем вторую ноду на хосте reaper2
 
 root@reaper2:~$ docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
-permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/swarm/join": dial unix /var/run/docker.sock: connect: permission denied
-root@reaper2:~$ sudo !!
-sudo docker swarm join --token SWMTKN-1-1z1e48okt5gcw176rka6ffb2r3kszsv14ycwcn0oisqohju3x3-7arvj0n2qnser1pcoo0b43smt 192.168.1.103:2377
 [sudo] password for reaper: 
 This node joined a swarm as a worker.
 
